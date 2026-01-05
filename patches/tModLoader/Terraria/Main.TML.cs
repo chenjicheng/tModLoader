@@ -54,6 +54,10 @@ public partial class Main
 
 	private static readonly HttpClient client = new HttpClient();
 
+	// Password cache for auto-login to servers
+	internal static Dictionary<string, string> serverPasswords = new Dictionary<string, string>();
+	internal static string pendingServerPassword = null; // Temporary storage for password being submitted
+
 	/// <summary>
 	/// A color that cycles through the colors like Rainbow Brick does.
 	/// </summary>
@@ -670,6 +674,37 @@ public partial class Main
 			// Otherwise, config changes take effect immediately and the player select menu will be shown
 			ConfigManager.LoadAll(); // Makes sure MP configs are cleared.
 			ConfigManager.OnChangedAll();
+		}
+	}
+
+	// Password caching methods for auto-login to servers
+	internal static void CacheServerPassword(string serverIP, string password)
+	{
+		if (!string.IsNullOrEmpty(serverIP) && !string.IsNullOrEmpty(password)) {
+			serverPasswords[serverIP] = password;
+		}
+	}
+
+	internal static string GetCachedServerPassword(string serverIP)
+	{
+		if (!string.IsNullOrEmpty(serverIP) && serverPasswords.TryGetValue(serverIP, out string password)) {
+			return password;
+		}
+		return null;
+	}
+
+	internal static void ClearCachedServerPassword(string serverIP)
+	{
+		if (!string.IsNullOrEmpty(serverIP)) {
+			serverPasswords.Remove(serverIP);
+		}
+	}
+
+	// Store password text from input before submission
+	internal static void PreparePasswordSubmission(string password)
+	{
+		if (!string.IsNullOrEmpty(password)) {
+			pendingServerPassword = password;
 		}
 	}
 }
