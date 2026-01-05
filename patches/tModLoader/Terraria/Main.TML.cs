@@ -56,6 +56,7 @@ public partial class Main
 
 	// Password cache for auto-login to servers
 	internal static Dictionary<string, string> serverPasswords = new Dictionary<string, string>();
+	internal static string pendingServerPassword = null; // Temporary storage for password being submitted
 
 	/// <summary>
 	/// A color that cycles through the colors like Rainbow Brick does.
@@ -696,6 +697,14 @@ public partial class Main
 	{
 		if (!string.IsNullOrEmpty(serverIP)) {
 			serverPasswords.Remove(serverIP);
+		}
+	}
+
+	// Store password text from input before submission
+	internal static void PreparePasswordSubmission(string password)
+	{
+		if (!string.IsNullOrEmpty(password)) {
+			pendingServerPassword = password;
 		}
 	}
 }

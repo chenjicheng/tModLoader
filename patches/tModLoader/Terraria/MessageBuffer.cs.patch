@@ -110,6 +110,13 @@
  					NetMessage.TrySendData(6);
  					if (Netplay.Connection.State == 2)
  						Netplay.Connection.State = 3;
++
++					// TML: Cache successfully authenticated password
++					if (!string.IsNullOrEmpty(Main.pendingServerPassword) && !string.IsNullOrEmpty(Main.getIP)) {
++						Main.CacheServerPassword(Main.getIP, Main.pendingServerPassword);
++						Main.pendingServerPassword = null;
++					}
++
 @@ -231,11 +_,11 @@
  				player14.skinVariant = reader.ReadByte();
  				player14.skinVariant = (int)MathHelper.Clamp(player14.skinVariant, 0f, PlayerVariantID.Count - 1);
